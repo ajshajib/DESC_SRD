@@ -22,6 +22,7 @@
 ./like_fourier Y10 3x2pt_clusterN_clusterWL mean_photo-z
 ./like_fourier Y10 3x2pt_clusterN_clusterWL sigma_photo-z
 
+echo "Y10 done"
 
 ./like_fourier Y1 shear_shear fid
 ./like_fourier Y1 shear_shear shear_calibration

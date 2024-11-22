@@ -6,9 +6,9 @@ jpl:
 
 
 cosmolike: 
-	gcc -std=c99 -Wno-missing-braces -Wno-missing-field-initializers -I/usr/local/include -L/usr/local/lib -shared -o like_fourier.so -fPIC like_fourier.c -lgsl -lgslcblas -lm -O0 -g -O3 -ffast-math -funroll-loops -std=gnu99 
+	gcc -std=c99 -Wno-missing-braces -Wno-missing-field-initializers -I/opt/local/include -L/opt/local/lib -shared -o like_fourier.so -fPIC like_fourier.c -lgsl -lgslcblas -lm -O0 -g -O3 -ffast-math -funroll-loops -std=gnu99 
 	
-	gcc -std=c99 -Wno-missing-braces -Wno-missing-field-initializers -I/usr/local/include -L/usr/local/lib -o like_fourier like_fourier.c -lgsl -lgslcblas -lm -O0 -g -O3 -ffast-math -funroll-loops -std=gnu99 
+	gcc -std=c99 -Wno-missing-braces -Wno-missing-field-initializers -I/opt/local/include -L/opt/local/lib -o like_fourier like_fourier.c -lgsl -lgslcblas -lm -O0 -g -O3 -ffast-math -funroll-loops -std=gnu99 
 
 
 

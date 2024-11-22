@@ -8,41 +8,54 @@ import numpy as np
 
 dirname = os.path.split(__file__)[0]
 lib_name = os.path.join(dirname, "like_fourier.so")
-lib=ctypes.cdll.LoadLibrary(lib_name)
+lib = ctypes.cdll.LoadLibrary(lib_name)
 double = ctypes.c_double
 
-Double10 = double*10
+Double10 = double * 10
 
-initcosmo=lib.init_cosmo
-initcosmo.argtypes=[]
+initcosmo = lib.init_cosmo
+initcosmo.argtypes = []
 
 
-initfisherprecision=lib.init_fisher_precision
-initfisherprecision.argtypes=[]
+initfisherprecision = lib.init_fisher_precision
+initfisherprecision.argtypes = []
 
-initbins=lib.init_binning_fourier
-initbins.argtypes=[ctypes.c_int, ctypes.c_double, ctypes.c_double, ctypes.c_double, ctypes.c_double, ctypes.c_int]
+initbins = lib.init_binning_fourier
+initbins.argtypes = [
+    ctypes.c_int,
+    ctypes.c_double,
+    ctypes.c_double,
+    ctypes.c_double,
+    ctypes.c_double,
+    ctypes.c_int,
+]
 
-initsurvey=lib.init_survey
-initsurvey.argtypes=[ctypes.c_char_p]
+initsurvey = lib.init_survey
+initsurvey.argtypes = [ctypes.c_char_p]
 
-initgalaxies=lib.init_galaxies
-initgalaxies.argtypes=[ctypes.c_char_p,ctypes.c_char_p,ctypes.c_char_p,ctypes.c_char_p,ctypes.c_char_p]
+initgalaxies = lib.init_galaxies
+initgalaxies.argtypes = [
+    ctypes.c_char_p,
+    ctypes.c_char_p,
+    ctypes.c_char_p,
+    ctypes.c_char_p,
+    ctypes.c_char_p,
+]
 
-initclusters=lib.init_clusters
-initclusters.argtypes=[]
+initclusters = lib.init_clusters
+initclusters.argtypes = []
 
-initia=lib.init_IA
-initia.argtypes=[ctypes.c_char_p,ctypes.c_char_p]
+initia = lib.init_IA
+initia.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
 
-initpriors=lib.init_priors
-initpriors.argtypes=[ctypes.c_char_p,ctypes.c_char_p,ctypes.c_char_p]
+initpriors = lib.init_priors
+initpriors.argtypes = [ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p]
 
-initprobes=lib.init_probes
-initprobes.argtypes=[ctypes.c_char_p]
+initprobes = lib.init_probes
+initprobes.argtypes = [ctypes.c_char_p]
 
-initdatainv=lib.init_data_inv
-initdatainv.argtypes=[ctypes.c_char_p,ctypes.c_char_p]
+initdatainv = lib.init_data_inv
+initdatainv.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
 
 get_N_tomo_shear = lib.get_N_tomo_shear
 get_N_tomo_shear.argtypes = []
@@ -63,10 +76,10 @@ get_N_ell.restype = ctypes.c_int
 
 # lib.initialize_all_wrapper.restype = ctypes.c_int
 # lib.initialize_all_wrapper.argtypes = [
-#     ctypes.c_char_p,       # const char * base_dir, 
-#     ctypes.c_bool,         # bool auborg_prior, 
-#     ctypes.c_bool,         # bool photo_bao_prior, 
-#     ctypes.c_bool,         # bool ia_datavector, 
+#     ctypes.c_char_p,       # const char * base_dir,
+#     ctypes.c_bool,         # bool auborg_prior,
+#     ctypes.c_bool,         # bool photo_bao_prior,
+#     ctypes.c_bool,         # bool ia_datavector,
 #     ctypes.c_char_p,       # char * ia_model, // must be either "none", "NLA_HF"
 #     ctypes.c_char_p,       # char * ia_luminosity_function // should be either "GAMA", "DEEP2"
 #     ctypes.c_bool,         # bool modify_shear_priors,
@@ -84,20 +97,20 @@ get_N_ell.restype = ctypes.c_int
 
 # initialize_all_wrapper=lib.initialize_all_wrapper
 
+
 class IterableStruct(ctypes.Structure):
     def names(self):
         out = []
         for name, obj, length in self.iter_parameters():
-            if length==0:
+            if length == 0:
                 out.append(name)
             else:
                 for i in xrange(length):
                     out.append(name + "_" + str(i))
         return out
 
-
     def iter_parameters(self):
-        for name,ptype in self._fields_:
+        for name, ptype in self._fields_:
             obj = getattr(self, name)
             if hasattr(ptype, "_length_"):
                 yield name, obj, ptype._length_
@@ -105,15 +118,14 @@ class IterableStruct(ctypes.Structure):
                 yield name, obj, 0
 
     def iter_parameters_filter(self, used):
-        for (name, obj, length) in self.iter_parameters():
+        for name, obj, length in self.iter_parameters():
             if name in used:
                 yield name, obj, 0
-
 
     def convert_to_vector(self):
         p = []
         for name, obj, length in self.iter_parameters():
-            if length==0:
+            if length == 0:
                 p.append(obj)
             else:
                 for i in xrange(length):
@@ -123,40 +135,35 @@ class IterableStruct(ctypes.Structure):
     def convert_to_vector_filter(self, used):
         p = []
         for name, obj, length in self.iter_parameters():
-            if length==0:
+            if length == 0:
                 if name in used:
                     p.append(obj)
             else:
                 for i in xrange(length):
-                    if name+'_'+str(i) in used:
+                    if name + "_" + str(i) in used:
                         p.append(obj[i])
         return p
 
-
-
     def read_from_cosmosis(self, block):
-        for name,ptype in self._fields_:
+        for name, ptype in self._fields_:
             obj = getattr(self, name)
             if hasattr(ptype, "_length_"):
                 for i in xrange(ptype._length_):
-                    obj[i] = block[self.section_name, name+"_"+str(i)]
+                    obj[i] = block[self.section_name, name + "_" + str(i)]
             else:
                 setattr(self, name, block[self.section_name, name])
 
-
-
     def print_struct(self):
-        for name,ptype in self._fields_:
+        for name, ptype in self._fields_:
             obj = getattr(self, name)
             if hasattr(ptype, "_length_"):
                 for i in xrange(ptype._length_):
-                    print "%s[%d] = %f" % (name, i, obj[i])
+                    print("%s[%d] = %f" % (name, i, obj[i]))
             else:
-                print "%s = %f" % (name, obj)
-
+                print("%s = %f" % (name, obj))
 
     def number_of_doubles(self):
-        n=0
+        n = 0
         for name, ptype in self._fields_:
             if hasattr(ptype, "_length_"):
                 n += ptype._length_
@@ -165,20 +172,20 @@ class IterableStruct(ctypes.Structure):
         return n
 
     def set_from_vector(self, p):
-        i=0
-        j=0
-        while i<len(p):
-            name,ptype = self._fields_[j]
-            j+=1
+        i = 0
+        j = 0
+        while i < len(p):
+            name, ptype = self._fields_[j]
+            j += 1
             if ptype == double:
                 setattr(self, name, p[i])
-                i+=1
+                i += 1
             else:
                 x = getattr(self, name)
-                assert x._type_==double
+                assert x._type_ == double
                 for k in xrange(x._length_):
                     x[k] = p[i]
-                    i+=1
+                    i += 1
 
 
 class InputCosmologyParams(IterableStruct):
@@ -208,17 +215,17 @@ class InputCosmologyParams(IterableStruct):
         c.MGSigma = 0.0
         c.MGmu = 0.0
         return c
-    
+
     @classmethod
     def prior_Fisher(cls):
         c = cls()
-        c.omega_m = 0.15*0.64
-        c.sigma_8 = 0.2*0.64
-        c.n_s = 0.1*0.64
-        c.w0 = .5*0.64
-        c.wa = 1.3*0.64
-        c.omega_b = 0.005*0.64
-        c.h0 = 0.125*0.64
+        c.omega_m = 0.15 * 0.64
+        c.sigma_8 = 0.2 * 0.64
+        c.n_s = 0.1 * 0.64
+        c.w0 = 0.5 * 0.64
+        c.wa = 1.3 * 0.64
+        c.omega_b = 0.005 * 0.64
+        c.h0 = 0.125 * 0.64
         c.MGSigma = 0.0
         c.MGmu = 0.0
         return c
@@ -234,31 +241,42 @@ class InputCosmologyParams(IterableStruct):
         c.omega_b = 0.002
         c.h0 = 0.02
         c.MGSigma = 0.1
-        c.MGmu = 0.1     
+        c.MGmu = 0.1
         return c
-
 
 
 class InputNuisanceParams(IterableStruct):
     section_name = "nuisance_parameters"
     _fields_ = [
-        ("bias", double*10),
-        ("source_z_bias", double*10),
+        ("bias", double * 10),
+        ("source_z_bias", double * 10),
         ("source_z_s", double),
-        ("lens_z_bias", double*10),
+        ("lens_z_bias", double * 10),
         ("lens_z_s", double),
-        ("shear_m", double*10),
+        ("shear_m", double * 10),
         ("A_ia", double),
         ("beta_ia", double),
         ("eta_ia", double),
         ("eta_ia_highz", double),
-        ("lf", double*6),
-        ("m_lambda", double*6),
+        ("lf", double * 6),
+        ("m_lambda", double * 6),
     ]
+
     @classmethod
     def fiducial_Y10(cls):
         c = cls()
-        c.bias[:] = [1.376695e+00,1.451179e+00,1.528404e+00,1.607983e+00,1.689579e+00,1.772899e+00,1.857700e+00,1.943754e+00,2.030887e+00,2.118943e+00]
+        c.bias[:] = [
+            1.376695e00,
+            1.451179e00,
+            1.528404e00,
+            1.607983e00,
+            1.689579e00,
+            1.772899e00,
+            1.857700e00,
+            1.943754e00,
+            2.030887e00,
+            2.118943e00,
+        ]
         c.source_z_bias[:] = np.repeat(0.0, 10)
         c.source_z_s = 0.05
         c.lens_z_bias[:] = np.repeat(0.0, 10)
@@ -271,28 +289,39 @@ class InputNuisanceParams(IterableStruct):
         c.lf[:] = np.repeat(0.0, 6)
         c.m_lambda[:] = [3.207, 0.993, 0.0, 0.456, -0.0, 0.0]
         return c
-    
+
     @classmethod
     def prior_Fisher(cls):
         c = cls()
-        c.bias[:] = np.repeat(1.0*0.64,10)
-        c.source_z_bias[:] = np.repeat(0.0, 10) # not yet defined
-        c.source_z_s = 0.05 # not yet defined
-        c.lens_z_bias[:] = np.repeat(0.0, 10) # not yet defined
-        c.lens_z_s = 0.03 # not yet defined
-        c.shear_m[:] = np.repeat(0.0, 10) # not yet defined
-        c.A_ia = 2.5*0.64
-        c.beta_ia = 1.*0.64
-        c.eta_ia = 1.5*0.64
-        c.eta_ia_highz = 0.5*0.64
-        c.lf[:] = np.repeat(0.0, 6) # not yet defined
-        c.m_lambda[:] = np.repeat(.1,6)
+        c.bias[:] = np.repeat(1.0 * 0.64, 10)
+        c.source_z_bias[:] = np.repeat(0.0, 10)  # not yet defined
+        c.source_z_s = 0.05  # not yet defined
+        c.lens_z_bias[:] = np.repeat(0.0, 10)  # not yet defined
+        c.lens_z_s = 0.03  # not yet defined
+        c.shear_m[:] = np.repeat(0.0, 10)  # not yet defined
+        c.A_ia = 2.5 * 0.64
+        c.beta_ia = 1.0 * 0.64
+        c.eta_ia = 1.5 * 0.64
+        c.eta_ia_highz = 0.5 * 0.64
+        c.lf[:] = np.repeat(0.0, 6)  # not yet defined
+        c.m_lambda[:] = np.repeat(0.1, 6)
         return c
 
     @classmethod
     def fiducial_Y1(cls):
         c = cls()
-        c.bias[:] = [1.562362e+00,1.732963e+00,1.913252e+00,2.100644e+00,2.293210e+00,1.0,1.0,1.0,1.0,1.0]
+        c.bias[:] = [
+            1.562362e00,
+            1.732963e00,
+            1.913252e00,
+            2.100644e00,
+            2.293210e00,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+        ]
         c.source_z_bias[:] = np.repeat(0.0, 10)
         c.source_z_s = 0.05
         c.lens_z_bias[:] = np.repeat(0.0, 10)
@@ -305,7 +334,7 @@ class InputNuisanceParams(IterableStruct):
         c.lf[:] = np.repeat(0.0, 6)
         c.m_lambda[:] = [3.207, 0.993, 0.0, 0.456, -0.0, 0.0]
         return c
-    
+
     @classmethod
     def fiducial_sigma(cls):
         c = cls()
@@ -328,30 +357,29 @@ class LikelihoodFunctionWrapper(object):
     def __init__(self, varied_parameters):
         self.varied_parameters = varied_parameters
 
-
     def fill_varied(self, icp, inp, x):
         assert len(x) == len(self.varied_parameters), "Wrong number of parameters"
         i = 0
         for s in [icp, inp]:
             for name, obj, length in s.iter_parameters():
-                if length==0:
+                if length == 0:
                     if name in self.varied_parameters:
-                        setattr(s, name, x[i])        
-                        i+=1
+                        setattr(s, name, x[i])
+                        i += 1
                 else:
                     for j in xrange(length):
                         name_i = name + "_" + str(j)
                         if name_i in self.varied_parameters:
                             obj[j] = x[i]
-                            i+=1
+                            i += 1
 
     def __call__(self, x):
         icp = InputCosmologyParams.fiducial()
         inp = InputNuisanceParams.fiducial()
         self.fill_varied(icp, inp, x)
-        #icp.print_struct()
-        #inp.print_struct()
-        #print
+        # icp.print_struct()
+        # inp.print_struct()
+        # print
         like = lib.log_like_wrapper(icp, inp)
         return like
 
@@ -361,183 +389,211 @@ lib.log_like_wrapper.restype = double
 log_like_wrapper = lib.log_like_wrapper
 
 
-def sample_cosmology_only_w0wa(MG = False):
+def sample_cosmology_only_w0wa(MG=False):
     if MG:
         varied_parameters = InputCosmologyParams().names()
     else:
-        varied_parameters = ['w0']
-        varied_parameters.append('wa')
+        varied_parameters = ["w0"]
+        varied_parameters.append("wa")
 
     return varied_parameters
 
 
-def sample_cosmology_only(MG = False):
+def sample_cosmology_only(MG=False):
     if MG:
         varied_parameters = InputCosmologyParams().names()
     else:
-        varied_parameters = ['omega_m']
-        varied_parameters.append('sigma_8')
-        varied_parameters.append('n_s')
-        varied_parameters.append('w0')
-        varied_parameters.append('wa')
-        varied_parameters.append('omega_b')
-        varied_parameters.append('h0')
+        varied_parameters = ["omega_m"]
+        varied_parameters.append("sigma_8")
+        varied_parameters.append("n_s")
+        varied_parameters.append("w0")
+        varied_parameters.append("wa")
+        varied_parameters.append("omega_b")
+        varied_parameters.append("h0")
     return varied_parameters
 
-def sample_cosmology_shear_nuisance(tomo_N_shear,MG = False):
+
+def sample_cosmology_shear_nuisance(tomo_N_shear, MG=False):
     varied_parameters = sample_cosmology_only(MG)
-    varied_parameters += ['shear_m_%d'%i for i in xrange(tomo_N_shear)]
-    varied_parameters += ['source_z_bias_%d'%i for i in xrange(tomo_N_shear)]
-    varied_parameters.append('source_z_s')
+    varied_parameters += ["shear_m_%d" % i for i in xrange(tomo_N_shear)]
+    varied_parameters += ["source_z_bias_%d" % i for i in xrange(tomo_N_shear)]
+    varied_parameters.append("source_z_s")
     return varied_parameters
 
-def sample_cosmology_2pt_nuisance(tomo_N_shear,tomo_N_lens,MG = False):
+
+def sample_cosmology_2pt_nuisance(tomo_N_shear, tomo_N_lens, MG=False):
     varied_parameters = sample_cosmology_only(MG)
-    varied_parameters += ['shear_m_%d'%i for i in xrange(tomo_N_shear)]
-    varied_parameters += ['source_z_bias_%d'%i for i in xrange(tomo_N_shear)]
-    varied_parameters += ['lens_z_bias_%d'%i for i in xrange(tomo_N_lens)]
-    varied_parameters += ['bias_%d'%i for i in xrange(tomo_N_lens)]
-    varied_parameters.append('source_z_s')
-    varied_parameters.append('lens_z_s')
+    varied_parameters += ["shear_m_%d" % i for i in xrange(tomo_N_shear)]
+    varied_parameters += ["source_z_bias_%d" % i for i in xrange(tomo_N_shear)]
+    varied_parameters += ["lens_z_bias_%d" % i for i in xrange(tomo_N_lens)]
+    varied_parameters += ["bias_%d" % i for i in xrange(tomo_N_lens)]
+    varied_parameters.append("source_z_s")
+    varied_parameters.append("lens_z_s")
     return varied_parameters
 
-def sample_cosmology_2pt_nuisance_IA_marg(tomo_N_shear,tomo_N_lens,MG = False):
+
+def sample_cosmology_2pt_nuisance_IA_marg(tomo_N_shear, tomo_N_lens, MG=False):
     varied_parameters = sample_cosmology_only(MG)
-    varied_parameters += ['shear_m_%d'%i for i in xrange(tomo_N_shear)]
-    varied_parameters += ['source_z_bias_%d'%i for i in xrange(tomo_N_shear)]
-    varied_parameters += ['lens_z_bias_%d'%i for i in xrange(tomo_N_lens)]
-    varied_parameters += ['bias_%d'%i for i in xrange(tomo_N_lens)]
-    varied_parameters.append('source_z_s')
-    varied_parameters.append('lens_z_s')
-    varied_parameters.append('A_ia')
-    varied_parameters.append('beta_ia')
-    varied_parameters.append('eta_ia')
-    varied_parameters.append('eta_ia_highz')
-    varied_parameters += ['lf_%d'%i for i in xrange(6)]
+    varied_parameters += ["shear_m_%d" % i for i in xrange(tomo_N_shear)]
+    varied_parameters += ["source_z_bias_%d" % i for i in xrange(tomo_N_shear)]
+    varied_parameters += ["lens_z_bias_%d" % i for i in xrange(tomo_N_lens)]
+    varied_parameters += ["bias_%d" % i for i in xrange(tomo_N_lens)]
+    varied_parameters.append("source_z_s")
+    varied_parameters.append("lens_z_s")
+    varied_parameters.append("A_ia")
+    varied_parameters.append("beta_ia")
+    varied_parameters.append("eta_ia")
+    varied_parameters.append("eta_ia_highz")
+    varied_parameters += ["lf_%d" % i for i in xrange(6)]
     return varied_parameters
 
-def sample_cosmology_2pt_cluster_nuisance(tomo_N_shear,tomo_N_lens,MG = False):
+
+def sample_cosmology_2pt_cluster_nuisance(tomo_N_shear, tomo_N_lens, MG=False):
     if MG:
-        print "sample_cosmology_2pt_cluster_nuisance: MG = True not yet supported for clusters"
+        print(
+            "sample_cosmology_2pt_cluster_nuisance: MG = True not yet supported for clusters"
+        )
         os.exit()
     varied_parameters = sample_cosmology_only(MG)
-    varied_parameters += ['shear_m_%d'%i for i in xrange(tomo_N_shear)]
-    varied_parameters += ['source_z_bias_%d'%i for i in xrange(tomo_N_shear)]
-    varied_parameters += ['lens_z_bias_%d'%i for i in xrange(tomo_N_lens)]
-    varied_parameters += ['bias_%d'%i for i in xrange(tomo_N_lens)]
-    varied_parameters.append('source_z_s')
-    varied_parameters.append('lens_z_s')
-    varied_parameters += ['m_lambda_%d'%i for i in xrange(6)]
+    varied_parameters += ["shear_m_%d" % i for i in xrange(tomo_N_shear)]
+    varied_parameters += ["source_z_bias_%d" % i for i in xrange(tomo_N_shear)]
+    varied_parameters += ["lens_z_bias_%d" % i for i in xrange(tomo_N_lens)]
+    varied_parameters += ["bias_%d" % i for i in xrange(tomo_N_lens)]
+    varied_parameters.append("source_z_s")
+    varied_parameters.append("lens_z_s")
+    varied_parameters += ["m_lambda_%d" % i for i in xrange(6)]
     return varied_parameters
+
 
 ################# SRD #########################
-def sample_cosmology_shear_SRD(MG = False):
+def sample_cosmology_shear_SRD(MG=False):
     if MG:
-        print "sample_cosmology_shear_SRD: MG = True not yet supported for clusters"
+        print("sample_cosmology_shear_SRD: MG = True not yet supported for clusters")
         os.exit()
     varied_parameters = sample_cosmology_only(MG)
-    varied_parameters.append('A_ia')
-    varied_parameters.append('beta_ia')
-    varied_parameters.append('eta_ia')
-    varied_parameters.append('eta_ia_highz')
-    return varied_parameters
-
-def sample_cosmology_shear_SRD_photo(tomo_N_shear,MG = False):
-    if MG:
-        print "sample_cosmology_shear_SRD: MG = True not yet supported for clusters"
-        os.exit()
-    varied_parameters = sample_cosmology_only(MG)
-    varied_parameters += ['source_z_bias_%d'%i for i in xrange(tomo_N_shear)]
-    varied_parameters.append('source_z_s')
-    varied_parameters.append('A_ia')
-    varied_parameters.append('beta_ia')
-    varied_parameters.append('eta_ia')
-    varied_parameters.append('eta_ia_highz')
-    return varied_parameters
-
-def sample_cosmology_clustering_SRD(tomo_N_lens,MG = False):
-    if MG:
-        print "sample_cosmology_clustering_SRD: MG = True not yet supported for clusters"
-        os.exit()
-    varied_parameters = sample_cosmology_only(MG)
-    varied_parameters += ['bias_%d'%i for i in xrange(tomo_N_lens)]
+    varied_parameters.append("A_ia")
+    varied_parameters.append("beta_ia")
+    varied_parameters.append("eta_ia")
+    varied_parameters.append("eta_ia_highz")
     return varied_parameters
 
 
-def sample_cosmology_2pt_SRD(tomo_N_lens,MG = False):
+def sample_cosmology_shear_SRD_photo(tomo_N_shear, MG=False):
     if MG:
-        print "sample_cosmology_2pt_SRD: MG = True not yet supported for clusters"
+        print("sample_cosmology_shear_SRD: MG = True not yet supported for clusters")
         os.exit()
     varied_parameters = sample_cosmology_only(MG)
-    varied_parameters += ['bias_%d'%i for i in xrange(tomo_N_lens)]
-    varied_parameters.append('A_ia')
-    varied_parameters.append('beta_ia')
-    varied_parameters.append('eta_ia')
-    varied_parameters.append('eta_ia_highz')
+    varied_parameters += ["source_z_bias_%d" % i for i in xrange(tomo_N_shear)]
+    varied_parameters.append("source_z_s")
+    varied_parameters.append("A_ia")
+    varied_parameters.append("beta_ia")
+    varied_parameters.append("eta_ia")
+    varied_parameters.append("eta_ia_highz")
     return varied_parameters
 
 
-def sample_cosmology_clusterN_SRD(MG = False):
+def sample_cosmology_clustering_SRD(tomo_N_lens, MG=False):
     if MG:
-        print "sample_cosmology_2pt_cluster_SRD: MG = True not yet supported for clusters"
+        print(
+            "sample_cosmology_clustering_SRD: MG = True not yet supported for clusters"
+        )
         os.exit()
     varied_parameters = sample_cosmology_only(MG)
-    varied_parameters += ['m_lambda_%d'%i for i in xrange(6)]
-    return varied_parameters
-
-def sample_cosmology_clusterN_clusterWL_SRD(MG = False):
-    if MG:
-        print "sample_cosmology_2pt_cluster_SRD: MG = True not yet supported for clusters"
-        os.exit()
-    varied_parameters = sample_cosmology_only(MG)
-    varied_parameters += ['m_lambda_%d'%i for i in xrange(6)]
-    return varied_parameters
-
-def sample_cosmology_2pt_cluster_SRD(tomo_N_lens,MG = False):
-    if MG:
-        print "sample_cosmology_2pt_cluster_SRD: MG = True not yet supported for clusters"
-        os.exit()
-    varied_parameters = sample_cosmology_only(MG)
-    varied_parameters += ['bias_%d'%i for i in xrange(tomo_N_lens)]
-    varied_parameters.append('A_ia')
-    varied_parameters.append('beta_ia')
-    varied_parameters.append('eta_ia')
-    varied_parameters.append('eta_ia_highz')
-    varied_parameters += ['m_lambda_%d'%i for i in xrange(6)]
+    varied_parameters += ["bias_%d" % i for i in xrange(tomo_N_lens)]
     return varied_parameters
 
 
+def sample_cosmology_2pt_SRD(tomo_N_lens, MG=False):
+    if MG:
+        print("sample_cosmology_2pt_SRD: MG = True not yet supported for clusters")
+        os.exit()
+    varied_parameters = sample_cosmology_only(MG)
+    varied_parameters += ["bias_%d" % i for i in xrange(tomo_N_lens)]
+    varied_parameters.append("A_ia")
+    varied_parameters.append("beta_ia")
+    varied_parameters.append("eta_ia")
+    varied_parameters.append("eta_ia_highz")
+    return varied_parameters
 
-def sample_main(varied_parameters, iterations, nwalker, nthreads, filename, blind=False):
-    print varied_parameters
+
+def sample_cosmology_clusterN_SRD(MG=False):
+    if MG:
+        print(
+            "sample_cosmology_2pt_cluster_SRD: MG = True not yet supported for clusters"
+        )
+        os.exit()
+    varied_parameters = sample_cosmology_only(MG)
+    varied_parameters += ["m_lambda_%d" % i for i in xrange(6)]
+    return varied_parameters
+
+
+def sample_cosmology_clusterN_clusterWL_SRD(MG=False):
+    if MG:
+        print(
+            "sample_cosmology_2pt_cluster_SRD: MG = True not yet supported for clusters"
+        )
+        os.exit()
+    varied_parameters = sample_cosmology_only(MG)
+    varied_parameters += ["m_lambda_%d" % i for i in xrange(6)]
+    return varied_parameters
+
+
+def sample_cosmology_2pt_cluster_SRD(tomo_N_lens, MG=False):
+    if MG:
+        print(
+            "sample_cosmology_2pt_cluster_SRD: MG = True not yet supported for clusters"
+        )
+        os.exit()
+    varied_parameters = sample_cosmology_only(MG)
+    varied_parameters += ["bias_%d" % i for i in xrange(tomo_N_lens)]
+    varied_parameters.append("A_ia")
+    varied_parameters.append("beta_ia")
+    varied_parameters.append("eta_ia")
+    varied_parameters.append("eta_ia_highz")
+    varied_parameters += ["m_lambda_%d" % i for i in xrange(6)]
+    return varied_parameters
+
+
+def sample_main(
+    varied_parameters, iterations, nwalker, nthreads, filename, blind=False
+):
+    print(varied_parameters)
 
     likelihood = LikelihoodFunctionWrapper(varied_parameters)
-    starting_point = InputCosmologyParams.fiducial().convert_to_vector_filter(varied_parameters)
-    starting_point += InputNuisanceParams().fiducial().convert_to_vector_filter(varied_parameters)
+    starting_point = InputCosmologyParams.fiducial().convert_to_vector_filter(
+        varied_parameters
+    )
+    starting_point += (
+        InputNuisanceParams().fiducial().convert_to_vector_filter(varied_parameters)
+    )
 
-    std = InputCosmologyParams.fiducial_sigma().convert_to_vector_filter(varied_parameters)
-    std += InputNuisanceParams().fiducial_sigma().convert_to_vector_filter(varied_parameters)
+    std = InputCosmologyParams.fiducial_sigma().convert_to_vector_filter(
+        varied_parameters
+    )
+    std += (
+        InputNuisanceParams()
+        .fiducial_sigma()
+        .convert_to_vector_filter(varied_parameters)
+    )
 
     p0 = emcee.utils.sample_ball(starting_point, std, size=nwalker)
 
     ndim = len(starting_point)
-    print "ndim = ", ndim
-    print "start = ", starting_point
-    print "std = ", std
-    sampler = emcee.EnsembleSampler(nwalker, ndim, likelihood,threads=nthreads)
-    f = open(filename, 'w')
+    print("ndim = ", ndim)
+    print("start = ", starting_point)
+    print("std = ", std)
+    sampler = emcee.EnsembleSampler(nwalker, ndim, likelihood, threads=nthreads)
+    f = open(filename, "w")
 
-    #write header here
-    f.write('# ' + '    '.join(varied_parameters)+"\n")
-    f.write('#blind=%s\n'%blind)
+    # write header here
+    f.write("# " + "    ".join(varied_parameters) + "\n")
+    f.write("#blind=%s\n" % blind)
     if blind:
-        f.write('#blinding_seed=%d\n'%blinding_seed)
+        f.write("#blinding_seed=%d\n" % blinding_seed)
 
-
-    for (p, loglike, state) in sampler.sample(p0,iterations=iterations):
+    for p, loglike, state in sampler.sample(p0, iterations=iterations):
         for row in p:
             if blind:
                 row = blind_parameters(varied_parameters, row)
-            f.write('%s\n' % ('  '.join([str(r) for r in row])))
+            f.write("%s\n" % ("  ".join([str(r) for r in row])))
     f.close()
-
