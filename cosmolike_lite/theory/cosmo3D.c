@@ -7,6 +7,7 @@
 #include <gsl/gsl_integration.h>
 #include <gsl/gsl_spline.h>
 #include <gsl/gsl_errno.h>
+#include <gsl/gsl_sf_gamma.h>
 #include <gsl/gsl_sf_expint.h>
 
 //===
@@ -80,12 +81,18 @@ double expint(double x)
 
 double omv_vareos(double a)
 {
-  // return (cosmology.Omega_v * exp(-3. * ((cosmology.w0 + cosmology.wa + 1.) * log(a) + cosmology.wa * (1. - a))));
   // gsl_sf_expint_Ei(x);
   double w0, alpha;
   w0 = cosmology.w0;
-  alpha = cosmology.wa;
-  return (cosmology.Omega_v * exp(3. * (1 + w0) * exp(alpha) * expint(-alpha / a)));
+  alpha = cosmology.wa + 1.45;
+  if (a < 0.002)
+  {
+    return cosmology.Omega_v;
+  }
+  z = 1. / a - 1.;
+  zp1 = 1. + z;
+  // return (cosmology.Omega_v * exp(-3. * ((cosmology.w0 + cosmology.wa + 1.) * log(a) + cosmology.wa * (1. - a))));
+  return (cosmology.Omega_v * exp(3. * (1 + w0) * exp(alpha) * (gsl_sf_expint_Ei(-alpha * zp1) - gsl_sf_expint_Ei(-alpha))));
 }
 
 // c%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -124,7 +131,7 @@ int func_for_growfac(double a, const double y[], double f[], void *params)
     one_plus_mg_mu += cosmology.MGmu * omegav / hub / cosmology.Omega_v;
   }
   // f[1] = y[0] * 3. * cosmology.Omega_m / (2. * hub * aa * aa * a) * one_plus_mg_mu - y[1] / a * (2. - (omegam + (3. * (cosmology.w0 + cosmology.wa * (1. - a)) + 1) * omegav) / (2. * hub));
-  f[1] = y[0] * 3. * cosmology.Omega_m / (2. * hub * aa * aa * a) * one_plus_mg_mu - y[1] / a * (2. - (omegam + (3. * (-1 + (1 + cosmology.w0) * exp(-cosmology.wa * (1 - a) / a)) + 1) * omegav) / (2. * hub));
+  f[1] = y[0] * 3. * cosmology.Omega_m / (2. * hub * aa * aa * a) * one_plus_mg_mu - y[1] / a * (2. - (omegam + (3. * (-1 + (1 + cosmology.w0) * exp(-(cosmology.wa + 1.45) * (1 - a) / a)) + 1) * omegav) / (2. * hub));
   return GSL_SUCCESS;
 }
 
@@ -524,7 +531,7 @@ void Delta_halofit(double **table_P_NL, double logkmin, double logkmax, double d
       aa = 1.0;
     omega_a(aa, &omm, &omv);
     // w_z = cosmology.w0 + cosmology.wa * (1. - aa);
-    w_z = -1 + (1 + cosmology.w0) * exp(-cosmology.wa * (1 - aa) / aa);
+    w_z = -1 + (1 + cosmology.w0) * exp(-(cosmology.wa + 1.45) * (1 - aa) / aa);
     amp = growfac(aa) / grow0;
     nonlin_scale(amp, &R_NL, &neff, &Curv);
     // printf("%le %le %le %le\n",aa,R_NL,neff,Curv);
