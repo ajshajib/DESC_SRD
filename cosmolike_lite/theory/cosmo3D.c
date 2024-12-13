@@ -85,14 +85,9 @@ double omv_vareos(double a)
   double w0, alpha;
   w0 = cosmology.w0;
   alpha = cosmology.wa + 1.45;
-  if (a < 0.002)
-  {
-    return cosmology.Omega_v;
-  }
-  z = 1. / a - 1.;
-  zp1 = 1. + z;
+
   // return (cosmology.Omega_v * exp(-3. * ((cosmology.w0 + cosmology.wa + 1.) * log(a) + cosmology.wa * (1. - a))));
-  return (cosmology.Omega_v * exp(3. * (1 + w0) * exp(alpha) * (gsl_sf_expint_Ei(-alpha * zp1) - gsl_sf_expint_Ei(-alpha))));
+  return (cosmology.Omega_v * exp(3. * (1 + w0) * exp(alpha) * (gsl_sf_expint_Ei(-alpha / a) - gsl_sf_expint_Ei(-alpha))));
 }
 
 // c%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
