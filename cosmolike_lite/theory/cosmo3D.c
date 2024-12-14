@@ -62,10 +62,10 @@ double a_chi(double chi1);
 
 double expint_E1(double x)
 {
-  if (x > 1e2)
-  {
-    x = 1e2;
-  }
+  // if (x > 1e2)
+  // {
+  //   x = 1e2;
+  // }
   return gsl_sf_expint_E1(x);
   // if (x <= 0)
   // {
