@@ -436,7 +436,7 @@ double log_L_Planck15_BAO_w0wa()
   param_fid[1] = 8.0467525e-01;
   param_fid[2] = 9.6406051e-01;
   param_fid[3] = -5.0551771e-01;
-  param_fid[4] = 1.45; // -1.46884482e+00;
+  param_fid[4] = 0; // -1.46884482e+00;
   param_fid[5] = 5.462452e-02;
   param_fid[6] = 6.3983876e-01;
 
@@ -518,7 +518,7 @@ double log_L_Planck15_BAO_H070p6_JLA_w0wa()
   param_fid[1] = 8.41330e-01;
   param_fid[2] = 9.63707e-01;
   param_fid[3] = -9.35997e-01;
-  param_fid[4] = -3.82183e-01;
+  param_fid[4] = 0; // -3.82183e-01;
   param_fid[5] = 4.79953e-02;
   param_fid[6] = 6.80887e-01;
 
@@ -575,7 +575,7 @@ double log_L_Planck18_BAO_Riess18_Pantheon_w0wa()
   param_fid[1] = 8.33421e-01;
   param_fid[2] = 9.64631e-01;
   param_fid[3] = -9.99383e-01;
-  param_fid[4] = -2.88583e-01;
+  param_fid[4] = 0; // -2.88583e-01;
   param_fid[5] = 4.64837e-02;
   param_fid[6] = 6.93855e-01;
 
@@ -640,7 +640,7 @@ double log_L_Planck18_BAO_w0wa()
   param_fid[1] = 7.95474e-01;
   param_fid[2] = 9.64545e-01;
   param_fid[3] = -5.77797e-01;
-  param_fid[4] = -1.31630e+00;
+  param_fid[4] = 0; // -1.31630e+00;
   param_fid[5] = 5.33105e-02;
   param_fid[6] = 6.48927e-01;
 
@@ -699,7 +699,7 @@ double log_L_Planck18_w0()
   param_fid[1] = 8.22263e-01;
   param_fid[2] = 9.65449e-01;
   param_fid[3] = -1.04080e+00;
-  param_fid[4] = 4.75908e-02;
+  param_fid[4] = 0; // 4.75908e-02;
   param_fid[5] = 6.86273e-01;
 
   for (c = 0; c < n_param; c++)

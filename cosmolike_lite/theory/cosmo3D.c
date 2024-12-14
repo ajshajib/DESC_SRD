@@ -71,7 +71,7 @@ double expint_E1(double x)
   double term = 1.0;
   int n = 1;
 
-  while (fabs(term) > 1e-10)
+  while (fabs(term) > 1e-6)
   {
     term *= -x / n;
     sum += term / n;
@@ -93,7 +93,7 @@ double expint_Ei(double x)
   double sum = 0.0;
   double term = 1.0;
   double n = 1.0;
-  while (term > 1e-10)
+  while (term > 1e-6)
   {
     term *= x / n;
     sum += term / n;
