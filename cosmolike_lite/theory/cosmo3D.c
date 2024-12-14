@@ -60,31 +60,6 @@ double f_K(double chi);
 double chi(double a);
 double a_chi(double chi1);
 
-double expint_Ei(double x)
-{
-  if (x == 0.0)
-  {
-    return -INFINITY;
-  }
-  else if (x < 0.0)
-  {
-    return -expint_Ei(-x);
-  }
-
-  double sum = 0.0;
-  double term = 1.0;
-  double n = 1.0;
-
-  while (term > 1e-10)
-  {
-    term *= x / n;
-    sum += term / n;
-    n += 1.0;
-  }
-
-  return sum + log(x) + 0.57721566490153286060; // Euler-Mascheroni constant
-}
-
 double expint_E1(double x)
 {
   if (x <= 0)
@@ -96,13 +71,35 @@ double expint_E1(double x)
   double term = 1.0;
   int n = 1;
 
-  while (term > 1e-10)
+  while (fabs(term) > 1e-10)
   {
     term *= -x / n;
     sum += term / n;
     n++;
   }
   return -0.57721566490153286060 - log(x) - sum; // Euler-Mascheroni constant
+}
+
+double expint_Ei(double x)
+{
+  if (x == 0.0)
+  {
+    return -INFINITY;
+  }
+  else if (x < 0.0)
+  {
+    return -expint_E1(-x);
+  }
+  double sum = 0.0;
+  double term = 1.0;
+  double n = 1.0;
+  while (term > 1e-10)
+  {
+    term *= x / n;
+    sum += term / n;
+    n += 1.0;
+  }
+  return sum + log(x) + 0.57721566490153286060;
 }
 
 // c%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -117,7 +114,7 @@ double omv_vareos(double a)
   alpha = cosmology.wa + 1.45;
 
   // return (cosmology.Omega_v * exp(-3. * ((cosmology.w0 + cosmology.wa + 1.) * log(a) + cosmology.wa * (1. - a))));
-  return (cosmology.Omega_v * exp(3. * (1 + w0) * exp(alpha) * (expint_Ei(-alpha / a) - expint_Ei(-alpha))));
+  return (cosmology.Omega_v * exp(3. * (1 + w0) * exp(alpha) * (expint_E1(alpha) - expint_E1(alpha / a))));
 }
 
 // c%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
