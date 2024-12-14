@@ -62,53 +62,11 @@ double a_chi(double chi1);
 
 double expint_E1(double x)
 {
-  // if (x > 1e2)
-  // {
-  //   x = 1e2;
-  // }
+  if (x > 700)
+  {
+    x = 700;
+  }
   return gsl_sf_expint_E1(x);
-  // if (x <= 0)
-  // {
-  //   return INFINITY; // E_1(x) is undefined for non-positive x
-  // }
-
-  // double sum = 0.0;
-  // double term = 1.0;
-  // int n = 1;
-
-  // while (1)
-  // {
-  //   term *= -x / n;
-  //   sum += term / n;
-  //   if (fabs(term / n / (sum - term / n)) < 1e-6)
-  //   {
-  //     break;
-  //   }
-  //   n++;
-  // }
-  // return -0.57721566490153286060 - log(x) - sum; // Euler-Mascheroni constant
-}
-
-double expint_Ei(double x)
-{
-  if (x == 0.0)
-  {
-    return -INFINITY;
-  }
-  else if (x < 0.0)
-  {
-    return -expint_E1(-x);
-  }
-  double sum = 0.0;
-  double term = 1.0;
-  double n = 1.0;
-  while (term > 1e-6)
-  {
-    term *= x / n;
-    sum += term / n;
-    n += 1.0;
-  }
-  return sum + log(x) + 0.57721566490153286060;
 }
 
 // c%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -121,11 +79,6 @@ double omv_vareos(double a)
   double w0, alpha;
   w0 = cosmology.w0;
   alpha = cosmology.wa + 1.45;
-  for (double i = 300; i < 500; i++)
-  {
-    printf("i = %le\n", i);
-    printf("expint_E1(x) = %le\n", expint_E1(i));
-  }
   // return (cosmology.Omega_v * exp(-3. * ((cosmology.w0 + cosmology.wa + 1.) * log(a) + cosmology.wa * (1. - a))));
   return (cosmology.Omega_v * exp(3. * (1 + w0) * exp(alpha) * (expint_E1(alpha) - expint_E1(alpha / a))));
 }
