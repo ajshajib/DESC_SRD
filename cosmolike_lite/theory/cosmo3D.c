@@ -62,22 +62,31 @@ double a_chi(double chi1);
 
 double expint_E1(double x)
 {
-  if (x <= 0)
+  if (x > 1e2)
   {
-    return INFINITY; // E_1(x) is undefined for non-positive x
+    x = 1e2;
   }
+  return gsl_sf_expint_E1(x);
+  // if (x <= 0)
+  // {
+  //   return INFINITY; // E_1(x) is undefined for non-positive x
+  // }
 
-  double sum = 0.0;
-  double term = 1.0;
-  int n = 1;
+  // double sum = 0.0;
+  // double term = 1.0;
+  // int n = 1;
 
-  while (fabs(term) > 1e-6)
-  {
-    term *= -x / n;
-    sum += term / n;
-    n++;
-  }
-  return -0.57721566490153286060 - log(x) - sum; // Euler-Mascheroni constant
+  // while (1)
+  // {
+  //   term *= -x / n;
+  //   sum += term / n;
+  //   if (fabs(term / n / (sum - term / n)) < 1e-6)
+  //   {
+  //     break;
+  //   }
+  //   n++;
+  // }
+  // return -0.57721566490153286060 - log(x) - sum; // Euler-Mascheroni constant
 }
 
 double expint_Ei(double x)
