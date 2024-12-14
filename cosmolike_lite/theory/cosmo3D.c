@@ -112,7 +112,7 @@ double omv_vareos(double a)
   double w0, alpha;
   w0 = cosmology.w0;
   alpha = cosmology.wa + 1.45;
-  // print expint_E1(alpha/a);
+  printf("here\n");
   printf("expint_E1(alpha/a) = %le\n", expint_E1(alpha / a));
   // return (cosmology.Omega_v * exp(-3. * ((cosmology.w0 + cosmology.wa + 1.) * log(a) + cosmology.wa * (1. - a))));
   return (cosmology.Omega_v * exp(3. * (1 + w0) * exp(alpha) * (expint_E1(alpha) - expint_E1(alpha / a))));
