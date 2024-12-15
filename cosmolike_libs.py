@@ -105,7 +105,7 @@ class IterableStruct(ctypes.Structure):
             if length == 0:
                 out.append(name)
             else:
-                for i in xrange(length):
+                for i in range(length):
                     out.append(name + "_" + str(i))
         return out
 
@@ -128,7 +128,7 @@ class IterableStruct(ctypes.Structure):
             if length == 0:
                 p.append(obj)
             else:
-                for i in xrange(length):
+                for i in range(length):
                     p.append(obj[i])
         return p
 
@@ -139,7 +139,7 @@ class IterableStruct(ctypes.Structure):
                 if name in used:
                     p.append(obj)
             else:
-                for i in xrange(length):
+                for i in range(length):
                     if name + "_" + str(i) in used:
                         p.append(obj[i])
         return p
@@ -148,7 +148,7 @@ class IterableStruct(ctypes.Structure):
         for name, ptype in self._fields_:
             obj = getattr(self, name)
             if hasattr(ptype, "_length_"):
-                for i in xrange(ptype._length_):
+                for i in range(ptype._length_):
                     obj[i] = block[self.section_name, name + "_" + str(i)]
             else:
                 setattr(self, name, block[self.section_name, name])
@@ -157,7 +157,7 @@ class IterableStruct(ctypes.Structure):
         for name, ptype in self._fields_:
             obj = getattr(self, name)
             if hasattr(ptype, "_length_"):
-                for i in xrange(ptype._length_):
+                for i in range(ptype._length_):
                     print("%s[%d] = %f" % (name, i, obj[i]))
             else:
                 print("%s = %f" % (name, obj))
@@ -183,7 +183,7 @@ class IterableStruct(ctypes.Structure):
             else:
                 x = getattr(self, name)
                 assert x._type_ == double
-                for k in xrange(x._length_):
+                for k in range(x._length_):
                     x[k] = p[i]
                     i += 1
 
@@ -367,7 +367,7 @@ class LikelihoodFunctionWrapper(object):
                         setattr(s, name, x[i])
                         i += 1
                 else:
-                    for j in xrange(length):
+                    for j in range(length):
                         name_i = name + "_" + str(j)
                         if name_i in self.varied_parameters:
                             obj[j] = x[i]
@@ -415,18 +415,18 @@ def sample_cosmology_only(MG=False):
 
 def sample_cosmology_shear_nuisance(tomo_N_shear, MG=False):
     varied_parameters = sample_cosmology_only(MG)
-    varied_parameters += ["shear_m_%d" % i for i in xrange(tomo_N_shear)]
-    varied_parameters += ["source_z_bias_%d" % i for i in xrange(tomo_N_shear)]
+    varied_parameters += ["shear_m_%d" % i for i in range(tomo_N_shear)]
+    varied_parameters += ["source_z_bias_%d" % i for i in range(tomo_N_shear)]
     varied_parameters.append("source_z_s")
     return varied_parameters
 
 
 def sample_cosmology_2pt_nuisance(tomo_N_shear, tomo_N_lens, MG=False):
     varied_parameters = sample_cosmology_only(MG)
-    varied_parameters += ["shear_m_%d" % i for i in xrange(tomo_N_shear)]
-    varied_parameters += ["source_z_bias_%d" % i for i in xrange(tomo_N_shear)]
-    varied_parameters += ["lens_z_bias_%d" % i for i in xrange(tomo_N_lens)]
-    varied_parameters += ["bias_%d" % i for i in xrange(tomo_N_lens)]
+    varied_parameters += ["shear_m_%d" % i for i in range(tomo_N_shear)]
+    varied_parameters += ["source_z_bias_%d" % i for i in range(tomo_N_shear)]
+    varied_parameters += ["lens_z_bias_%d" % i for i in range(tomo_N_lens)]
+    varied_parameters += ["bias_%d" % i for i in range(tomo_N_lens)]
     varied_parameters.append("source_z_s")
     varied_parameters.append("lens_z_s")
     return varied_parameters
@@ -434,17 +434,17 @@ def sample_cosmology_2pt_nuisance(tomo_N_shear, tomo_N_lens, MG=False):
 
 def sample_cosmology_2pt_nuisance_IA_marg(tomo_N_shear, tomo_N_lens, MG=False):
     varied_parameters = sample_cosmology_only(MG)
-    varied_parameters += ["shear_m_%d" % i for i in xrange(tomo_N_shear)]
-    varied_parameters += ["source_z_bias_%d" % i for i in xrange(tomo_N_shear)]
-    varied_parameters += ["lens_z_bias_%d" % i for i in xrange(tomo_N_lens)]
-    varied_parameters += ["bias_%d" % i for i in xrange(tomo_N_lens)]
+    varied_parameters += ["shear_m_%d" % i for i in range(tomo_N_shear)]
+    varied_parameters += ["source_z_bias_%d" % i for i in range(tomo_N_shear)]
+    varied_parameters += ["lens_z_bias_%d" % i for i in range(tomo_N_lens)]
+    varied_parameters += ["bias_%d" % i for i in range(tomo_N_lens)]
     varied_parameters.append("source_z_s")
     varied_parameters.append("lens_z_s")
     varied_parameters.append("A_ia")
     varied_parameters.append("beta_ia")
     varied_parameters.append("eta_ia")
     varied_parameters.append("eta_ia_highz")
-    varied_parameters += ["lf_%d" % i for i in xrange(6)]
+    varied_parameters += ["lf_%d" % i for i in range(6)]
     return varied_parameters
 
 
@@ -455,13 +455,13 @@ def sample_cosmology_2pt_cluster_nuisance(tomo_N_shear, tomo_N_lens, MG=False):
         )
         os.exit()
     varied_parameters = sample_cosmology_only(MG)
-    varied_parameters += ["shear_m_%d" % i for i in xrange(tomo_N_shear)]
-    varied_parameters += ["source_z_bias_%d" % i for i in xrange(tomo_N_shear)]
-    varied_parameters += ["lens_z_bias_%d" % i for i in xrange(tomo_N_lens)]
-    varied_parameters += ["bias_%d" % i for i in xrange(tomo_N_lens)]
+    varied_parameters += ["shear_m_%d" % i for i in range(tomo_N_shear)]
+    varied_parameters += ["source_z_bias_%d" % i for i in range(tomo_N_shear)]
+    varied_parameters += ["lens_z_bias_%d" % i for i in range(tomo_N_lens)]
+    varied_parameters += ["bias_%d" % i for i in range(tomo_N_lens)]
     varied_parameters.append("source_z_s")
     varied_parameters.append("lens_z_s")
-    varied_parameters += ["m_lambda_%d" % i for i in xrange(6)]
+    varied_parameters += ["m_lambda_%d" % i for i in range(6)]
     return varied_parameters
 
 
@@ -483,7 +483,7 @@ def sample_cosmology_shear_SRD_photo(tomo_N_shear, MG=False):
         print("sample_cosmology_shear_SRD: MG = True not yet supported for clusters")
         os.exit()
     varied_parameters = sample_cosmology_only(MG)
-    varied_parameters += ["source_z_bias_%d" % i for i in xrange(tomo_N_shear)]
+    varied_parameters += ["source_z_bias_%d" % i for i in range(tomo_N_shear)]
     varied_parameters.append("source_z_s")
     varied_parameters.append("A_ia")
     varied_parameters.append("beta_ia")
@@ -499,7 +499,7 @@ def sample_cosmology_clustering_SRD(tomo_N_lens, MG=False):
         )
         os.exit()
     varied_parameters = sample_cosmology_only(MG)
-    varied_parameters += ["bias_%d" % i for i in xrange(tomo_N_lens)]
+    varied_parameters += ["bias_%d" % i for i in range(tomo_N_lens)]
     return varied_parameters
 
 
@@ -508,7 +508,7 @@ def sample_cosmology_2pt_SRD(tomo_N_lens, MG=False):
         print("sample_cosmology_2pt_SRD: MG = True not yet supported for clusters")
         os.exit()
     varied_parameters = sample_cosmology_only(MG)
-    varied_parameters += ["bias_%d" % i for i in xrange(tomo_N_lens)]
+    varied_parameters += ["bias_%d" % i for i in range(tomo_N_lens)]
     varied_parameters.append("A_ia")
     varied_parameters.append("beta_ia")
     varied_parameters.append("eta_ia")
@@ -523,7 +523,7 @@ def sample_cosmology_clusterN_SRD(MG=False):
         )
         os.exit()
     varied_parameters = sample_cosmology_only(MG)
-    varied_parameters += ["m_lambda_%d" % i for i in xrange(6)]
+    varied_parameters += ["m_lambda_%d" % i for i in range(6)]
     return varied_parameters
 
 
@@ -545,12 +545,12 @@ def sample_cosmology_2pt_cluster_SRD(tomo_N_lens, MG=False):
         )
         os.exit()
     varied_parameters = sample_cosmology_only(MG)
-    varied_parameters += ["bias_%d" % i for i in xrange(tomo_N_lens)]
+    varied_parameters += ["bias_%d" % i for i in range(tomo_N_lens)]
     varied_parameters.append("A_ia")
     varied_parameters.append("beta_ia")
     varied_parameters.append("eta_ia")
     varied_parameters.append("eta_ia_highz")
-    varied_parameters += ["m_lambda_%d" % i for i in xrange(6)]
+    varied_parameters += ["m_lambda_%d" % i for i in range(6)]
     return varied_parameters
 
 
