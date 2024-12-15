@@ -534,7 +534,7 @@ def sample_cosmology_clusterN_clusterWL_SRD(MG=False):
         )
         os.exit()
     varied_parameters = sample_cosmology_only(MG)
-    varied_parameters += ["m_lambda_%d" % i for i in xrange(6)]
+    varied_parameters += ["m_lambda_%d" % i for i in range(6)]
     return varied_parameters
 
 
