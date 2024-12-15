@@ -19,7 +19,7 @@ factorY1 = 11808.28 / 18000.0
 
 
 def read_invcov(cov_filename):
-    covfile = np.loadtxt(cov_filename.decode("UTF-8"))
+    covfile = np.loadtxt(cov_filename)
     ndata = int(np.max(covfile[:, 0])) + 1
     invcov = np.zeros((ndata, ndata))
     for i in range(0, covfile.shape[0]):
@@ -38,12 +38,23 @@ def init_Y1_shear():
     initcosmo()
     initfisherprecision()
     initbins(20, 20.0, 15000.0, 3000.0, 21.0, 5, 5)
-    initsurvey("LSST_Y1")
-    initgalaxies(file_source_z, file_lens_z, "gaussian", "gaussian", "SRD")
+    initsurvey("LSST_Y1".encode("utf-8"))
+    initgalaxies(
+        file_source_z.encode("utf-8"),
+        file_lens_z.encode("utf-8"),
+        "gaussian".encode("utf-8"),
+        "gaussian".encode("utf-8"),
+        "SRD".encode("utf-8"),
+    )
     initclusters()
-    initia("NLA_HF", "GAMA")
-    initpriors("none", "none", "none", "none")
-    initprobes("shear_shear")
+    initia("NLA_HF".encode("utf-8"), "GAMA".encode("utf-8"))
+    initpriors(
+        "none".encode("utf-8"),
+        "none".encode("utf-8"),
+        "none".encode("utf-8"),
+        "none".encode("utf-8"),
+    )
+    initprobes("shear_shear".encode("utf-8"))
     invcov = read_invcov(cov_file)
     return invcov * factorY1
 
@@ -59,12 +70,23 @@ def init_Y10_shear():
     initcosmo()
     initfisherprecision()
     initbins(20, 20.0, 15000.0, 3000.0, 21.0, 5, 5)
-    initsurvey("LSST_Y10")
-    initgalaxies(file_source_z, file_lens_z, "gaussian", "gaussian", "SRD")
+    initsurvey("LSST_Y10".encode("utf-8"))
+    initgalaxies(
+        file_source_z.encode("utf-8"),
+        file_lens_z.encode("utf-8"),
+        "gaussian".encode("utf-8"),
+        "gaussian".encode("utf-8"),
+        "SRD".encode("utf-8"),
+    )
     initclusters()
-    initia("NLA_HF", "GAMA")
-    initpriors("none", "none", "none", "none")
-    initprobes("shear_shear")
+    initia("NLA_HF".encode("utf-8"), "GAMA".encode("utf-8"))
+    initpriors(
+        "none".encode("utf-8"),
+        "none".encode("utf-8"),
+        "none".encode("utf-8"),
+        "none".encode("utf-8"),
+    )
+    initprobes("shear_shear".encode("utf-8"))
     invcov = read_invcov(cov_file)
     return invcov * factorY10
 
@@ -80,12 +102,23 @@ def init_Y1():
     initcosmo()
     initfisherprecision()
     initbins(20, 20.0, 15000.0, 3000.0, 21.0, 5, 5)
-    initsurvey("LSST_Y1")
-    initgalaxies(file_source_z, file_lens_z, "gaussian", "gaussian", "SRD")
+    initsurvey("LSST_Y1".encode("utf-8"))
+    initgalaxies(
+        file_source_z.encode("utf-8"),
+        file_lens_z.encode("utf-8"),
+        "gaussian".encode("utf-8"),
+        "gaussian".encode("utf-8"),
+        "SRD".encode("utf-8"),
+    )
     initclusters()
-    initia("NLA_HF", "GAMA")
-    initpriors("none", "none", "none", "none")
-    initprobes("3x2pt")
+    initia("NLA_HF".encode("utf-8"), "GAMA".encode("utf-8"))
+    initpriors(
+        "none".encode("utf-8"),
+        "none".encode("utf-8"),
+        "none".encode("utf-8"),
+        "none".encode("utf-8"),
+    )
+    initprobes("3x2pt".encode("utf-8"))
     invcov = read_invcov(cov_file)
     return invcov * factorY1
 
@@ -101,12 +134,23 @@ def init_Y10():
     initcosmo()
     initfisherprecision()
     initbins(20, 20.0, 15000.0, 3000.0, 21.0, 5, 5)
-    initsurvey("LSST_Y10")
-    initgalaxies(file_source_z, file_lens_z, "gaussian", "gaussian", "SRD")
+    initsurvey("LSST_Y10".encode("utf-8"))
+    initgalaxies(
+        file_source_z.encode("utf-8"),
+        file_lens_z.encode("utf-8"),
+        "gaussian".encode("utf-8"),
+        "gaussian".encode("utf-8"),
+        "SRD".encode("utf-8"),
+    )
     initclusters()
-    initia("NLA_HF", "GAMA")
-    initpriors("none", "none", "none", "none")
-    initprobes("3x2pt")
+    initia("NLA_HF".encode("utf-8"), "GAMA".encode("utf-8"))
+    initpriors(
+        "none".encode("utf-8"),
+        "none".encode("utf-8"),
+        "none".encode("utf-8"),
+        "none".encode("utf-8"),
+    )
+    initprobes("3x2pt".encode("utf-8"))
     invcov = read_invcov(cov_file)
     return invcov * factorY10
 
@@ -122,12 +166,23 @@ def init_Y1_clustering():
     initcosmo()
     initfisherprecision()
     initbins(20, 20.0, 15000.0, 3000.0, 21.0, 5, 5)
-    initsurvey("LSST_Y1")
-    initgalaxies(file_source_z, file_lens_z, "gaussian", "gaussian", "SRD")
+    initsurvey("LSST_Y1".encode("utf-8"))
+    initgalaxies(
+        file_source_z.encode("utf-8"),
+        file_lens_z.encode("utf-8"),
+        "gaussian".encode("utf-8"),
+        "gaussian".encode("utf-8"),
+        "SRD".encode("utf-8"),
+    )
     initclusters()
-    initia("NLA_HF", "GAMA")
-    initpriors("none", "none", "none", "none")
-    initprobes("pos_pos")
+    initia("NLA_HF".encode("utf-8"), "GAMA".encode("utf-8"))
+    initpriors(
+        "none".encode("utf-8"),
+        "none".encode("utf-8"),
+        "none".encode("utf-8"),
+        "none".encode("utf-8"),
+    )
+    initprobes("pos_pos".encode("utf-8"))
     invcov = read_invcov(cov_file)
     return invcov * factorY1
 
@@ -143,12 +198,23 @@ def init_Y10_clustering():
     initcosmo()
     initfisherprecision()
     initbins(20, 20.0, 15000.0, 3000.0, 21.0, 5, 10)
-    initsurvey("LSST_Y10")
-    initgalaxies(file_source_z, file_lens_z, "gaussian", "gaussian", "SRD")
+    initsurvey("LSST_Y10".encode("utf-8"))
+    initgalaxies(
+        file_source_z.encode("utf-8"),
+        file_lens_z.encode("utf-8"),
+        "gaussian".encode("utf-8"),
+        "gaussian".encode("utf-8"),
+        "SRD".encode("utf-8"),
+    )
     initclusters()
-    initia("NLA_HF", "GAMA")
-    initpriors("none", "none", "none", "none")
-    initprobes("pos_pos")
+    initia("NLA_HF".encode("utf-8"), "GAMA".encode("utf-8"))
+    initpriors(
+        "none".encode("utf-8"),
+        "none".encode("utf-8"),
+        "none".encode("utf-8"),
+        "none".encode("utf-8"),
+    )
+    initprobes("pos_pos".encode("utf-8"))
     invcov = read_invcov(cov_file)
     return invcov * factorY10
 
@@ -164,12 +230,23 @@ def init_Y1_clusters():
     initcosmo()
     initfisherprecision()
     initbins(20, 20.0, 15000.0, 3000.0, 21.0, 5, 5)
-    initsurvey("LSST_Y1")
-    initgalaxies(file_source_z, file_lens_z, "gaussian", "gaussian", "SRD")
+    initsurvey("LSST_Y1".encode("utf-8"))
+    initgalaxies(
+        file_source_z.encode("utf-8"),
+        file_lens_z.encode("utf-8"),
+        "gaussian".encode("utf-8"),
+        "gaussian".encode("utf-8"),
+        "SRD".encode("utf-8"),
+    )
     initclusters()
-    initia("NLA_HF", "GAMA")
-    initpriors("none", "none", "none", "none")
-    initprobes("clusterN_clusterWL")
+    initia("NLA_HF".encode("utf-8"), "GAMA".encode("utf-8"))
+    initpriors(
+        "none".encode("utf-8"),
+        "none".encode("utf-8"),
+        "none".encode("utf-8"),
+        "none".encode("utf-8"),
+    )
+    initprobes("clusterN_clusterWL".encode("utf-8"))
     invcov = read_invcov(cov_file)
     return invcov * factorY1
 
@@ -185,12 +262,23 @@ def init_Y10_clusters():
     initcosmo()
     initfisherprecision()
     initbins(20, 20.0, 15000.0, 3000.0, 21.0, 5, 5)
-    initsurvey("LSST_Y10")
-    initgalaxies(file_source_z, file_lens_z, "gaussian", "gaussian", "SRD")
+    initsurvey("LSST_Y10".encode("utf-8"))
+    initgalaxies(
+        file_source_z.encode("utf-8"),
+        file_lens_z.encode("utf-8"),
+        "gaussian".encode("utf-8"),
+        "gaussian".encode("utf-8"),
+        "SRD".encode("utf-8"),
+    )
     initclusters()
-    initia("NLA_HF", "GAMA")
-    initpriors("none", "none", "none", "none")
-    initprobes("clusterN_clusterWL")
+    initia("NLA_HF".encode("utf-8"), "GAMA".encode("utf-8"))
+    initpriors(
+        "none".encode("utf-8"),
+        "none".encode("utf-8"),
+        "none".encode("utf-8"),
+        "none".encode("utf-8"),
+    )
+    initprobes("clusterN_clusterWL".encode("utf-8"))
     invcov = read_invcov(cov_file)
     return invcov * factorY10
 
@@ -239,20 +327,36 @@ def get_fisher_matrix(FM_params, invcov, flag, step_width=1.0):
             # print(p0, dp)
 
             setattr(cosmo_var, p, p0 - 2.0 * dp)
-            write_datav(file1, cosmo_var, nuisance_fid)
-            dv_mm = np.genfromtxt(file1.decode("UTF-8"))[:, 1]
+            write_datav(
+                file1.encode("utf-8"),
+                cosmo_var,
+                nuisance_fid,
+            )
+            dv_mm = np.genfromtxt(file1)[:, 1]
 
             setattr(cosmo_var, p, p0 - dp)
-            write_datav(file1, cosmo_var, nuisance_fid)
-            dv_m = np.genfromtxt(file1.decode("UTF-8"))[:, 1]
+            write_datav(
+                file1.encode("utf-8"),
+                cosmo_var,
+                nuisance_fid,
+            )
+            dv_m = np.genfromtxt(file1)[:, 1]
 
             setattr(cosmo_var, p, p0 + dp)
-            write_datav(file1, cosmo_var, nuisance_fid)
-            dv_p = np.genfromtxt(file1.decode("UTF-8"))[:, 1]
+            write_datav(
+                file1.encode("utf-8"),
+                cosmo_var,
+                nuisance_fid,
+            )
+            dv_p = np.genfromtxt(file1)[:, 1]
 
             setattr(cosmo_var, p, p0 + 2.0 * dp)
-            write_datav(file1, cosmo_var, nuisance_fid)
-            dv_pp = np.genfromtxt(file1.decode("UTF-8"))[:, 1]
+            write_datav(
+                file1.encode("utf-8"),
+                cosmo_var,
+                nuisance_fid,
+            )
+            dv_pp = np.genfromtxt(file1)[:, 1]
         elif tomo:
             pshort = p[:-2]
             i = int(p[-1])
@@ -267,19 +371,19 @@ def get_fisher_matrix(FM_params, invcov, flag, step_width=1.0):
             dp = getattr(nuisance_sigma, pshort)[i] * step_width * 10.0
 
             getattr(np_var, pshort)[i] = p0 - 2.0 * dp
-            write_datav(file1, cosmo_fid, np_var)
+            write_datav(file1.encode("utf-8"), cosmo_fid, np_var)
             dv_mm = np.genfromtxt(file1)[:, 1]
 
             getattr(np_var, pshort)[i] = p0 - dp
-            write_datav(file1, cosmo_fid, np_var)
+            write_datav(file1.encode("utf-8"), cosmo_fid, np_var)
             dv_m = np.genfromtxt(file1)[:, 1]
 
             getattr(np_var, pshort)[i] = p0 + dp
-            write_datav(file1, cosmo_fid, np_var)
+            write_datav(file1.encode("utf-8"), cosmo_fid, np_var)
             dv_p = np.genfromtxt(file1)[:, 1]
 
             getattr(np_var, pshort)[i] = p0 + 2.0 * dp
-            write_datav(file1, cosmo_fid, np_var)
+            write_datav(file1.encode("utf-8"), cosmo_fid, np_var)
             dv_pp = np.genfromtxt(file1)[:, 1]
         else:
             np_var = nuisance_fid
@@ -292,19 +396,19 @@ def get_fisher_matrix(FM_params, invcov, flag, step_width=1.0):
             dp = getattr(nuisance_sigma, p) * step_width * 10.0
 
             setattr(np_var, p, p0 - 2.0 * dp)
-            write_datav(file1, cosmo_fid, np_var)
+            write_datav(file1.encode("utf-8"), cosmo_fid, np_var)
             dv_mm = np.genfromtxt(file1)[:, 1]
 
             setattr(np_var, p, p0 - dp)
-            write_datav(file1, cosmo_fid, np_var)
+            write_datav(file1.encode("utf-8"), cosmo_fid, np_var)
             dv_m = np.genfromtxt(file1)[:, 1]
 
             setattr(np_var, p, p0 + dp)
-            write_datav(file1, cosmo_fid, np_var)
+            write_datav(file1.encode("utf-8"), cosmo_fid, np_var)
             dv_p = np.genfromtxt(file1)[:, 1]
 
             setattr(np_var, p, p0 + 2.0 * dp)
-            write_datav(file1, cosmo_fid, np_var)
+            write_datav(file1.encode("utf-8"), cosmo_fid, np_var)
             dv_pp = np.genfromtxt(file1)[:, 1]
 
         # five point method for the first derivative
@@ -419,7 +523,7 @@ flag = sys.argv[1]
 
 datav_fid = "./datav/" + sys.argv[2] + "_" + flag + "_fid"
 datav_biased = "./datav/" + sys.argv[2] + "_" + flag + "_" + sys.argv[3]
-print(datav_biased)
+# print(datav_biased)
 
 # FM_params= sample_cosmology_only(MG=False)
 if sys.argv[2] == "clusterN_clusterWL":
@@ -436,7 +540,10 @@ if sys.argv[3] == "mean_photo-z":
     h = open("Fishers/Fisher_all.txt", "a")
 if sys.argv[3] == "mean_photo-z":
     g = open("Fishers/Fisher_cosmo.txt", "a")
-print(FM_params)
+# print(FM_params)
+
+print("here")
+
 for i in range(0, 1):
     step_width = 0.5 + i * 0.25
     # step_width=1.0
