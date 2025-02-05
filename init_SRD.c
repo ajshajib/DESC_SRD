@@ -119,7 +119,7 @@ void init_cosmo()
   printf("Initializing Standard Runmode/Cosmology\n");
   printf("-------------------------------------------\n");
   // set_cosmological_parameters_to_Planck_15_TT_TE_EE_lowP();
-  set_cosmological_parameters_to_wphiCDM();
+  set_cosmological_parameters_to_wphicdm();
   // set_cosmological_parameters_to_Joe();
   // sprintf(pdeltaparams.runmode,"emu");
 }
