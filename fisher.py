@@ -299,11 +299,7 @@ def get_fisher_matrix(FM_params, invcov, flag, step_width=1.0):
     cosmo_fid = InputCosmologyParams().fiducial()
     cosmo_sigma = InputCosmologyParams().fiducial_sigma()
     cosmo_prior = InputCosmologyParams().prior_Fisher()
-    print("############################################")
-    print("Cosmo prior")
-    print(cosmo_prior)
-    print("############################################")
-    raise ValueError("check this out")
+
     if flag == "Y1":
         nuisance_fid = InputNuisanceParams().fiducial_Y1()
     elif flag == "Y10":
@@ -321,6 +317,12 @@ def get_fisher_matrix(FM_params, invcov, flag, step_width=1.0):
             tomo = 0
 
         if p in InputCosmologyParams().names():
+            print("############################################")
+            print("Cosmo prior", p)
+            print(getattr(cosmo_prior, p))
+            print("############################################")
+            continue
+
             cosmo_var = InputCosmologyParams().fiducial()
             diag_prior_Fisher[n] = 1.0 / (getattr(cosmo_prior, p)) ** 2.0
             p0 = getattr(cosmo_fid, p)
