@@ -321,10 +321,10 @@ def get_fisher_matrix(FM_params, invcov, flag, step_width=1.0):
             print("Cosmo prior", p)
             print(getattr(cosmo_prior, p))
             print("############################################")
-            continue
+            # continue
 
             cosmo_var = InputCosmologyParams().fiducial()
-            diag_prior_Fisher[n] = 1.0 / (getattr(cosmo_prior, p)) ** 2.0
+            diag_prior_Fisher[n] = 0  # 1.0 / (getattr(cosmo_prior, p)) ** 2.0
             p0 = getattr(cosmo_fid, p)
             dp = getattr(cosmo_sigma, p) * step_width
             print(
