@@ -299,7 +299,10 @@ def get_fisher_matrix(FM_params, invcov, flag, step_width=1.0):
     cosmo_fid = InputCosmologyParams().fiducial()
     cosmo_sigma = InputCosmologyParams().fiducial_sigma()
     cosmo_prior = InputCosmologyParams().prior_Fisher()
+    print("############################################")
+    print("Cosmo prior")
     print(cosmo_prior)
+    print("############################################")
     raise ValueError("check this out")
     if flag == "Y1":
         nuisance_fid = InputNuisanceParams().fiducial_Y1()
@@ -543,8 +546,6 @@ if sys.argv[3] == "mean_photo-z":
 if sys.argv[3] == "mean_photo-z":
     g = open("Fishers/Fisher_cosmo.txt", "a")
 # print(FM_params)
-
-print("here")
 
 for i in range(0, 1):
     step_width = 0.5 + i * 0.25
